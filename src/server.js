@@ -7,6 +7,9 @@ import {
   getContactsController,
   getContactByIdController,
 } from './controllers/contactsController.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import contactRoutes from './routers/contact.js';
 
 dotenv.config();
 
@@ -24,17 +27,13 @@ export async function setupServer() {
   });
 
   // Contacts routes
-  app.get('/contacts', getContactsController);
-  app.get('/contacts/:contactId', getContactByIdController);
+  app.use('/contacts', contactRoutes);
 
   // 404
-  app.use((_req, res) => res.status(404).json({ message: 'Not found' }));
+  app.use(notFoundHandler);
 
-  // Global error handler
-  app.use((err, req, res, _next) => {
-    req.log?.error?.(err);
-    res.status(500).json({ message: 'Internal server error' });
-  });
+  //ErrHandler
+  app.use(errorHandler);
 
   // DB -> Server
   await initMongoConnection();

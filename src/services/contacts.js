@@ -11,3 +11,12 @@ export async function getContactById(contactId) {
   if (!mongoose.isValidObjectId(contactId)) return null;
   return await Contact.findById(contactId).lean();
 }
+
+export async function addContact(contactData) {
+  const data = await Contact.create(contactData);
+  return data;
+}
+export async function deleteContact(contactId) {
+  const data = await Contact.findByIdAndDelete(contactId);
+  return data;
+}
