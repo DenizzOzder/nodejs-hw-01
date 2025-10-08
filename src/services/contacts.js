@@ -1,9 +1,31 @@
 import mongoose from 'mongoose';
 import { Contact } from '../models/contact.js';
+import { calculatePagination } from '../utils/calculatePagination.js';
+import { DEFAULT_PAGINATION_VALUES } from '../constants/pagination.js';
 
 // Tümünü getir
-export async function getAllContacts() {
-  return await Contact.find({}).lean();
+export async function getAllContacts(
+  page = DEFAULT_PAGINATION_VALUES.page,
+  perPage = DEFAULT_PAGINATION_VALUES.perPage,
+  sortBy = DEFAULT_PAGINATION_VALUES.sortBy,
+  sortOrder = DEFAULT_PAGINATION_VALUES.sortOrder,
+) {
+  const skip = (page - 1) * perPage;
+  const limit = perPage;
+  const totalData = await Contact.countDocuments();
+  const pagination = calculatePagination(totalData, page, perPage);
+  const data = await Contact.find({})
+    .lean()
+    .skip(skip)
+    .limit(limit)
+    .sort({
+      [sortBy]: sortOrder,
+    });
+
+  return {
+    data,
+    pagination,
+  };
 }
 
 // ID'ye göre getir

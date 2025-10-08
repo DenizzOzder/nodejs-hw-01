@@ -6,9 +6,15 @@ import {
   getContactById,
 } from '../services/contacts.js';
 import httpErrors from 'http-errors';
+import { parsePagination } from '../utils/parsePagination.js';
+import { parseSortParam } from '../utils/parseSortParam.js';
 
 export async function getContactsController(_req, res, next) {
-  const contacts = await getAllContacts();
+  const queryParams = _req.query;
+  const { page, perPage } = parsePagination(queryParams);
+  const { sortBy, sortOrder } = parseSortParam(queryParams);
+
+  const contacts = await getAllContacts(page, perPage, sortBy, sortOrder);
   return res.status(200).json({
     status: 200,
     message: 'Successfully found contacts!',
