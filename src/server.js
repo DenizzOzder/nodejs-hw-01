@@ -10,6 +10,7 @@ import {
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import contactRoutes from './routers/contact.js';
+import AuthRouter from './routers/auth.js';
 
 dotenv.config();
 
@@ -26,8 +27,9 @@ export async function setupServer() {
     res.json({ message: 'Server is running!' });
   });
 
-  // Contacts routes
+  //Routes
   app.use('/contacts', contactRoutes);
+  app.use('/auth', AuthRouter);
 
   // 404
   app.use(notFoundHandler);
