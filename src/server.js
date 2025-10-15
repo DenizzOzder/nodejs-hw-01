@@ -11,6 +11,7 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import contactRoutes from './routers/contact.js';
 import AuthRouter from './routers/auth.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ export async function setupServer() {
   app.use(cors());
   app.use(pino());
   app.use(express.json());
+  app.use(cookieParser());
 
   // Health check
   app.get('/', (_req, res) => {

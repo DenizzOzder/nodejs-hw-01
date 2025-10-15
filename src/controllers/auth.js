@@ -12,9 +12,9 @@ export const registerUserController = async (req, res) => {
 
 export const loginUserController = async (req, res) => {
   const userData = req.body;
-  const data = await loginUser(userData);
+  const session = await loginUser(userData);
   res.status(200).send({
-    mesaj: 'Successfully logged in an user!',
-    data,
+    mesaj: 'Access Token',
+    data: session,
   });
 };

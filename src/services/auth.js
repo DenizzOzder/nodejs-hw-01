@@ -1,7 +1,9 @@
 import createHttpError from 'http-errors';
 import UserCollection from '../models/user.js';
 import bcrypt from 'bcrypt';
-
+import { randomBytes } from 'node:crypto';
+import { ACCESS_TOKEN_TIME, REFRESH_TOKEN_TIME } from '../constants/index.js';
+import SessionCollection from '../models/session.js';
 export const registerUser = async (userData) => {
   const { name, email, password } = userData;
   const userCheck = await UserCollection.findOne({ email });
@@ -26,5 +28,18 @@ export const loginUser = async (userData) => {
   if (!passCheck) {
     throw createHttpError(400, 'Şifre Yanlış');
   }
-  return user;
+
+  const accessToken = randomBytes(30).toString('base64');
+  const refreshToken = randomBytes(30).toString('base64');
+  const accessTokenValidUntil = new Date(Date.now() + ACCESS_TOKEN_TIME);
+  const refreshTokenValidUntil = new Date(Date.now() + REFRESH_TOKEN_TIME);
+
+  const sessionData = await SessionCollection.create({
+    userId: user.id,
+    accessToken,
+    refreshToken,
+    accessTokenValidUntil,
+    refreshTokenValidUntil,
+  });
+  return sessionData;
 };
