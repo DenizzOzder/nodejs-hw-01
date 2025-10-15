@@ -6,7 +6,7 @@ const userSchema = new Schema(
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, trim: true },
     // select:false -> JSON/queries'de default gizli olur (login'de +password ile seçersin)
-    password: { type: String, required: true, select: false },
+    password: { type: String, required: true },
   },
   {
     timestamps: true,

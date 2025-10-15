@@ -14,3 +14,17 @@ export const registerUser = async (userData) => {
   const user = await UserCollection.create(userData);
   return user;
 };
+
+export const loginUser = async (userData) => {
+  const { email, password } = userData;
+
+  const user = await UserCollection.findOne({ email });
+  if (!user) {
+    throw createHttpError(404, 'Kullanıcı Bulunamadı');
+  }
+  const passCheck = await bcrypt.compare(password, user.password);
+  if (!passCheck) {
+    throw createHttpError(400, 'Şifre Yanlış');
+  }
+  return user;
+};
