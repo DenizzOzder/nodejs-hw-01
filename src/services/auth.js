@@ -29,6 +29,7 @@ export const loginUser = async (userData) => {
     throw createHttpError(400, 'Şifre Yanlış');
   }
 
+  await SessionCollection.deleteMany({ userId: user._id });
   const accessToken = randomBytes(30).toString('base64');
   const refreshToken = randomBytes(30).toString('base64');
   const accessTokenValidUntil = new Date(Date.now() + ACCESS_TOKEN_TIME);
@@ -42,4 +43,35 @@ export const loginUser = async (userData) => {
     refreshTokenValidUntil,
   });
   return sessionData;
+};
+export const refreshSession = async (refreshTokenFromCookie) => {
+  const oldSession = await SessionCollection.findOne({
+    refreshToken: refreshTokenFromCookie,
+  });
+  if (!oldSession) {
+    throw createHttpError(401, 'Invalid refresh token');
+  }
+  await SessionCollection.deleteOne({ _id: oldSession._id });
+  const accessToken = randomBytes(30).toString('base64url');
+  const refreshToken = randomBytes(30).toString('base64url');
+
+  const accessTokenValidUntil = new Date(Date.now() + ACCESS_TOKEN_TIME);
+  const refreshTokenValidUntil = new Date(Date.now() + REFRESH_TOKEN_TIME);
+  await SessionCollection.create({
+    userId: oldSession.userId,
+    accessToken,
+    refreshToken,
+    accessTokenValidUntil,
+    refreshTokenValidUntil,
+  });
+
+  return {
+    accessToken,
+    refreshToken,
+    accessTokenValidUntil,
+    refreshTokenValidUntil,
+  };
+};
+export const logoutUser = async (sessionId) => {
+  await SessionCollection.findByIdAndDelete(sessionId);
 };

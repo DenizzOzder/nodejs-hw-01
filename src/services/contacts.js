@@ -3,42 +3,63 @@ import { Contact } from '../models/contact.js';
 import { calculatePagination } from '../utils/calculatePagination.js';
 import { DEFAULT_PAGINATION_VALUES } from '../constants/pagination.js';
 
-// Tümünü getir
-export async function getAllContacts(
+// GET /contacts
+export async function getAllContacts({
+  userId,
   page = DEFAULT_PAGINATION_VALUES.page,
   perPage = DEFAULT_PAGINATION_VALUES.perPage,
   sortBy = DEFAULT_PAGINATION_VALUES.sortBy,
   sortOrder = DEFAULT_PAGINATION_VALUES.sortOrder,
-) {
+}) {
   const skip = (page - 1) * perPage;
-  const limit = perPage;
-  const totalData = await Contact.countDocuments();
-  const pagination = calculatePagination(totalData, page, perPage);
-  const data = await Contact.find({})
-    .lean()
+  const order = sortOrder === 'asc' ? 1 : -1;
+
+  const filter = { userId };
+  const totalData = await Contact.countDocuments(filter);
+
+  const data = await Contact.find(filter)
+    .sort({ [sortBy]: order })
     .skip(skip)
-    .limit(limit)
-    .sort({
-      [sortBy]: sortOrder,
-    });
+    .limit(perPage)
+    .lean();
 
-  return {
-    data,
-    pagination,
-  };
+  const pagination = calculatePagination(totalData, page, perPage);
+  return { data, pagination };
 }
 
-// ID'ye göre getir
-export async function getContactById(contactId) {
+// GET /contacts/:id
+export async function getContactById({ userId, contactId }) {
   if (!mongoose.isValidObjectId(contactId)) return null;
-  return await Contact.findById(contactId).lean();
+  return await Contact.findOne({ _id: contactId, userId }).lean();
 }
 
-export async function addContact(contactData) {
-  const data = await Contact.create(contactData);
-  return data;
+// POST /contacts
+export async function addContact(userId, contactData) {
+  // İstemciden gelen body'deki userId'yi YOK SAY ve oturum sahibini yaz
+  const doc = await Contact.create({ ...contactData, userId });
+  return doc.toObject(); // transform varsa password vs. zaten filtrelenir
 }
-export async function deleteContact(contactId) {
-  const data = await Contact.findByIdAndDelete(contactId);
-  return data;
+
+// DELETE /contacts/:id
+export async function deleteContact({ userId, contactId }) {
+  if (!mongoose.isValidObjectId(contactId)) return null;
+  // Sadece oturum sahibinin kaydını sil
+  const deleted = await Contact.findOneAndDelete({
+    _id: contactId,
+    userId,
+  }).lean();
+  return deleted; // bulunamazsa null döner
+}
+
+export async function updateContactById({ userId, contactId, body }) {
+  if (!mongoose.isValidObjectId(contactId)) return null;
+
+  // Sadece oturum sahibine ait kaydı günceller
+  const updated = await Contact.findOneAndUpdate(
+    { _id: contactId, userId },
+    body,
+    { new: true }, // güncellenmiş dökümanı döndür
+  ).lean();
+
+  return updated; // bulunamazsa null
 }

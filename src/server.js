@@ -3,15 +3,12 @@ import cors from 'cors';
 import pino from 'pino-http';
 import dotenv from 'dotenv';
 import { initMongoConnection } from './db/initMongoConnection.js';
-import {
-  getContactsController,
-  getContactByIdController,
-} from './controllers/contactsController.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
-import contactRoutes from './routers/contact.js';
+import router from './routers/contact.js';
 import AuthRouter from './routers/auth.js';
 import cookieParser from 'cookie-parser';
+import { authenticate } from './middlewares/authenticate.js';
 
 dotenv.config();
 
@@ -30,7 +27,8 @@ export async function setupServer() {
   });
 
   //Routes
-  app.use('/contacts', contactRoutes);
+  app.use('/contacts', authenticate, router);
+  app.use('/contacts', router);
   app.use('/auth', AuthRouter);
 
   // 404

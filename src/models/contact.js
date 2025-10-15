@@ -4,18 +4,34 @@ const { Schema } = mongoose;
 const contactSchema = new Schema(
   {
     name: { type: String, required: true, trim: true },
-    phoneNumber: { type: String, required: true },
-    email: { type: String },
+    phoneNumber: { type: String, required: true, trim: true },
+    email: { type: String, trim: true },
     isFavourite: { type: Boolean, default: false },
     contactType: {
       type: String,
       enum: ['work', 'home', 'personal'],
       default: 'personal',
     },
+
+    // ⬇️ Adım 8: Bu kontaktın hangi kullanıcıya ait olduğunu gösterir
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Users',
+      required: true,
+      index: true,
+    },
   },
   {
     timestamps: true,
     versionKey: false,
+  },
+);
+
+contactSchema.index(
+  { userId: 1, email: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { email: { $exists: true, $type: 'string' } },
   },
 );
 
