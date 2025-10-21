@@ -5,6 +5,7 @@ import {
   refreshSessionController,
   registerUserController,
   resetMailController,
+  resetpwdController,
 } from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { loginUser, registerUser } from '../validators/users.js';
@@ -27,3 +28,5 @@ AuthRouter.post('/refresh', controllerWrapper(refreshSessionController));
 export default AuthRouter;
 
 AuthRouter.post('/send-reset-email', controllerWrapper(resetMailController));
+
+AuthRouter.post('/reset-pwd', controllerWrapper(resetpwdController));

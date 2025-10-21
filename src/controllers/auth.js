@@ -81,3 +81,12 @@ export const resetMailController = async (req, res) => {
     });
   }
 };
+
+export const resetpwdController = async (req, res) => {
+  const { token, password } = req.body;
+
+  res.status(200).send({
+    message: 'Şifre Güncellendi',
+    status: 200,
+  });
+};
