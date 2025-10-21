@@ -3,6 +3,7 @@ import {
   logoutUser,
   refreshSession,
   registerUser,
+  resetMail,
 } from '../services/auth.js';
 
 export const registerUserController = async (req, res) => {
@@ -63,4 +64,20 @@ export const refreshSessionController = async (req, res) => {
     message: 'Successfully refreshed a session!',
     data: { accessToken },
   });
+};
+
+export const resetMailController = async (req, res) => {
+  const { email } = req.body;
+  const sonuc = await resetMail(email);
+  if (sonuc) {
+    res.status(200).send({
+      message: 'Mail Successfully Send',
+      status: 200,
+    });
+  } else {
+    res.status(404).send({
+      message: 'Mail invalid',
+      status: 404,
+    });
+  }
 };

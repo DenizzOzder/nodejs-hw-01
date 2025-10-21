@@ -4,6 +4,7 @@ import {
   logoutUserController,
   refreshSessionController,
   registerUserController,
+  resetMailController,
 } from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { loginUser, registerUser } from '../validators/users.js';
@@ -24,3 +25,5 @@ AuthRouter.post(
 AuthRouter.post('/logout', controllerWrapper(logoutUserController));
 AuthRouter.post('/refresh', controllerWrapper(refreshSessionController));
 export default AuthRouter;
+
+AuthRouter.post('/send-reset-email', controllerWrapper(resetMailController));

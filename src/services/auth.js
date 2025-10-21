@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { randomBytes } from 'node:crypto';
 import { ACCESS_TOKEN_TIME, REFRESH_TOKEN_TIME } from '../constants/index.js';
 import SessionCollection from '../models/session.js';
+import { sendMail } from '../utils/sendMail.js';
 export const registerUser = async (userData) => {
   const { name, email, password } = userData;
   const userCheck = await UserCollection.findOne({ email });
@@ -74,4 +75,22 @@ export const refreshSession = async (refreshTokenFromCookie) => {
 };
 export const logoutUser = async (sessionId) => {
   await SessionCollection.findByIdAndDelete(sessionId);
+};
+
+export const resetMail = async (email) => {
+  const user = await UserCollection.findOne({ email });
+  /*Kullanıcı Mevcut mu? */
+  if (!user) {
+    throw createHttpError(404, 'Kullanıcı Bulunamadı');
+  }
+  /*TOKEN OLUŞTURMA*/
+
+  /*Mail Gönder */
+  await sendMail({
+    from: process.env.SMTP_FROM,
+    to: 'lamipi1142@fixwap.com',
+    subjet: 'Şifre Sıfırlama',
+    html: '<h1> MERHABA DÜNYALI </h1><p>Bu bir şifre sıfırlama Mailidir.</p>',
+  });
+  return true;
 };

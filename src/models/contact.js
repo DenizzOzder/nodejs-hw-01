@@ -26,7 +26,6 @@ const contactSchema = new Schema(
     versionKey: false,
   },
 );
-
 contactSchema.index(
   { userId: 1, email: 1 },
   {
