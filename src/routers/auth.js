@@ -1,32 +1,19 @@
-import { Router } from 'express';
+import express from 'express';
 import {
-  loginUserController,
-  logoutUserController,
-  refreshSessionController,
-  registerUserController,
   resetMailController,
   resetpwdController,
 } from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
-import { loginUser, registerUser } from '../validators/users.js';
-import controllerWrapper from '../utils/ctrlWrapper.js';
+import { sendResetEmailSchema, resetPwdSchema } from '../validators/auth.js';
 
-const AuthRouter = Router();
+const router = express.Router();
 
-AuthRouter.post(
-  '/register',
-  validateBody(registerUser),
-  controllerWrapper(registerUserController),
+router.post(
+  '/send-reset-email',
+  validateBody(sendResetEmailSchema),
+  resetMailController,
 );
-AuthRouter.post(
-  '/login',
-  validateBody(loginUser),
-  controllerWrapper(loginUserController),
-);
-AuthRouter.post('/logout', controllerWrapper(logoutUserController));
-AuthRouter.post('/refresh', controllerWrapper(refreshSessionController));
-export default AuthRouter;
 
-AuthRouter.post('/send-reset-email', controllerWrapper(resetMailController));
+router.post('/reset-pwd', validateBody(resetPwdSchema), resetpwdController);
 
-AuthRouter.post('/reset-pwd', controllerWrapper(resetpwdController));
+export default router;

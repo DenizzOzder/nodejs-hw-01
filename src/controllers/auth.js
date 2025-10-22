@@ -1,12 +1,41 @@
 import createError from 'http-errors';
 import {
+  resetMail,
+  resetPwd,
   loginUser,
   logoutUser,
   refreshSession,
   registerUser,
-  resetMail,
-  resetPwd,
 } from '../services/auth.js';
+
+export const resetMailController = async (req, res, next) => {
+  try {
+    await resetMail(req.body.email);
+    res.status(200).json({
+      status: 200,
+      message: 'Reset password email has been successfully sent.',
+      data: {},
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const resetpwdController = async (req, res, next) => {
+  try {
+    const { token, password } = req.body;
+    await resetPwd(token, password);
+    res.status(200).json({
+      status: 200,
+      message: 'Password has been successfully reset.',
+      data: {},
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Aşağıdakiler senin mevcut akışın için burada dursun (değiştirmedim):
 
 export const registerUserController = async (req, res, next) => {
   try {
@@ -73,26 +102,6 @@ export const refreshSessionController = async (req, res, next) => {
       message: 'Successfully refreshed a session!',
       data: { accessToken },
     });
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const resetMailController = async (req, res, next) => {
-  try {
-    const { email } = req.body;
-    await resetMail(email);
-    res.status(200).send({ message: 'Mail Successfully Sent', status: 200 });
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const resetpwdController = async (req, res, next) => {
-  try {
-    const { token, password } = req.body;
-    await resetPwd(token, password);
-    res.status(200).send({ message: 'Şifre Güncellendi', status: 200 });
   } catch (err) {
     next(err);
   }
