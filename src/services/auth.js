@@ -102,6 +102,7 @@ export const resetMail = async (email) => {
       `,
     });
   } catch (_e) {
+    console.error('SMTP ERROR:', e?.message, e?.code, e?.response);
     throw createHttpError(
       500,
       'Failed to send the email, please try again later.',
