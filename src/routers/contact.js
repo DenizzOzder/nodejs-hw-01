@@ -11,6 +11,7 @@ import { validateBody } from '../middlewares/validateBody.js';
 import { contactSchema, patchSchema } from '../validators/contact.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { authenticate } from '../middlewares/authenticate.js'; // <-- eklendi
+import { upload } from '../middlewares/upload.js';
 
 const router = express.Router();
 
@@ -24,7 +25,12 @@ router.get('/', ctrlWrapper(getContactsController));
 router.get('/:id', isValidId, ctrlWrapper(getContactByIdController));
 
 // POST /contacts
-router.post('/', validateBody(contactSchema), ctrlWrapper(AddContactCtrl));
+router.post(
+  '/',
+  validateBody(contactSchema),
+  upload.single('photo'),
+  ctrlWrapper(AddContactCtrl),
+);
 
 // PATCH /contacts/:id
 router.patch(

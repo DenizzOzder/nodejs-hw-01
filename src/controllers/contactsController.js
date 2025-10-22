@@ -9,6 +9,8 @@ import {
 import { updateContactById } from '../services/contacts.js';
 import { parsePagination } from '../utils/parsePagination.js';
 import { parseSortParam } from '../utils/parseSortParam.js';
+import { saveFileUpload } from '../utils/saveFileUpload.js';
+import { saveFileCloud } from '../utils/saveFileCloud.js';
 
 // GET /contacts  -> Sadece oturum sahibinin kontakları
 export async function getContactsController(req, res) {
@@ -54,7 +56,12 @@ export async function AddContactCtrl(req, res) {
   const userId = req.user._id;
   const body = req.body;
 
-  const created = await addContact(userId, body); // service, body.userId'yi override eder
+  const resim = req.file;
+  let resimUrl;
+  if (resim) {
+    resimUrl = await saveFileCloud(resim);
+  }
+  const created = await addContact(userId, body, { photo: resimUrl }); // service, body.userId'yi override eder
   return res.status(201).json({
     status: 201,
     message: 'Successfully created a contact!',

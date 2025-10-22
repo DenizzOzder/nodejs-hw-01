@@ -9,6 +9,7 @@ import router from './routers/contact.js';
 import AuthRouter from './routers/auth.js';
 import cookieParser from 'cookie-parser';
 import { authenticate } from './middlewares/authenticate.js';
+import { UPLOADS_FOLDER } from './constants/index.js';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ export async function setupServer() {
   app.use('/contacts', authenticate, router);
   app.use('/contacts', router);
   app.use('/auth', AuthRouter);
+  app.use('/uploads', express.static(UPLOADS_FOLDER));
 
   // 404
   app.use(notFoundHandler);

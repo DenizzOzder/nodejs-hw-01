@@ -20,6 +20,10 @@ const contactSchema = new Schema(
       required: true,
       index: true,
     },
+    photo: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,
