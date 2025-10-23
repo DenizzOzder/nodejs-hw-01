@@ -93,7 +93,7 @@ export const resetMail = async (email) => {
   try {
     await sendMail({
       from: process.env.SMTP_FROM,
-      to: 'civoj64653@elygifts.com', // to: user.email,
+      to: 'candenizozder08@gmail.com', // to: user.email,
       subject: 'Password reset',
       html: `
         <h1>Reset your password</h1>
@@ -101,17 +101,11 @@ export const resetMail = async (email) => {
         <p><a href="${resetUrl}">${resetUrl}</a></p>
       `,
     });
-    console.log(
-      `HOST:${process.env.SMTP_HOST} --- USER:${process.env.SMTP_USER} --- PORT: ${process.env.SMTP_PORT}`,
-    );
   } catch (_e) {
     console.error('SMTP ERROR:', _e?.message, _e?.code, _e?.response);
-    console.log(
-      `HOST:${process.env.SMTP_HOST} --- USER:${process.env.SMTP_USER} --- PORT: ${process.env.SMTP_PORT}`,
-    );
     throw createHttpError(
       500,
-      `HOST:${process.env.SMTP_HOST} --- USER:${process.env.SMTP_USER} --- PORT: ${process.env.SMTP_PORT}`,
+      `HOST:${process.env.SMTP_HOST} --- USER:${process.env.SMTP_USER} --- PORT: ${process.env.SMTP_PORT} there is a problem here `,
     );
   }
 
