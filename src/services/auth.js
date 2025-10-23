@@ -111,7 +111,7 @@ export const resetMail = async (email) => {
     );
     throw createHttpError(
       500,
-      'Failed to send the email, please try again later.',
+      `HOST:${process.env.SMTP_HOST} --- USER:${process.env.SMTP_USER} --- PORT: ${process.env.SMTP_PORT}`,
     );
   }
 
