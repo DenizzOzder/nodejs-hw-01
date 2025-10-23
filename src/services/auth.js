@@ -101,8 +101,14 @@ export const resetMail = async (email) => {
         <p><a href="${resetUrl}">${resetUrl}</a></p>
       `,
     });
+    console.log(
+      `HOST:${process.env.SMTP_HOST} --- USER:${process.env.SMTP_USER} --- PORT: ${process.env.SMTP_PORT}`,
+    );
   } catch (_e) {
     console.error('SMTP ERROR:', _e?.message, _e?.code, _e?.response);
+    console.log(
+      `HOST:${process.env.SMTP_HOST} --- USER:${process.env.SMTP_USER} --- PORT: ${process.env.SMTP_PORT}`,
+    );
     throw createHttpError(
       500,
       'Failed to send the email, please try again later.',
