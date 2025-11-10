@@ -11,7 +11,7 @@ info:
 servers:
   - url: http://localhost:3000
     description: Lokal
-  - url: https://<render-app>.onrender.com
+  - url: https://nodejs-hw-01-1-xds7.onrender.com
     description: Üretim
 
 tags:
