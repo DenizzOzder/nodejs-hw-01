@@ -1,0 +1,10 @@
+description: Kaynak bulunamadı
+content:
+  application/json:
+    schema:
+      $ref: ../../../docs/openapi.yaml#/components/schemas/ErrorResponse
+    examples:
+      notFound:
+        value:
+          status: 404
+          message: Not found

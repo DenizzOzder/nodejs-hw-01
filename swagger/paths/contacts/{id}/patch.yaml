@@ -1,0 +1,23 @@
+tags:
+  - Contacts
+summary: Kişiyi kısmi güncelle
+operationId: updateContact
+security:
+  - bearerAuth: []
+parameters:
+  - $ref: ../../../components/parameters/contactId.path.yaml
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: ../../../../docs/openapi.yaml#/components/schemas/UpdateContactDto
+responses:
+  '200':
+    description: Güncellenen kayıt
+    content:
+      application/json:
+        schema:
+          $ref: ../../../../docs/openapi.yaml#/components/schemas/Contact
+  '404':
+    $ref: ../../../components/responses/not-found.yaml

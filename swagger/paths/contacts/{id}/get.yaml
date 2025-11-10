@@ -1,0 +1,18 @@
+tags:
+  - Contacts
+summary: Tek bir kişiyi getir
+operationId: getContactById
+description: Belirtilen `contactId` ile tek bir kişi kaydını döndürür.
+security:
+  - bearerAuth: []
+parameters:
+  - $ref: ../../../components/parameters/contactId.path.yaml
+responses:
+  '200':
+    description: Başarılı
+    content:
+      application/json:
+        schema:
+          $ref: ../../../../docs/openapi.yaml#/components/schemas/Contact
+  '404':
+    $ref: ../../../components/responses/not-found.yaml

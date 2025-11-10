@@ -1,0 +1,25 @@
+tags:
+  - Contacts
+summary: Yeni kişi oluştur
+operationId: createContact
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: ../../../docs/openapi.yaml#/components/schemas/CreateContactDto
+responses:
+  '201':
+    description: Oluşturuldu
+    content:
+      application/json:
+        schema:
+          $ref: ../../../docs/openapi.yaml#/components/schemas/Contact
+  '400':
+    description: Geçersiz istek
+    content:
+      application/json:
+        schema:
+          $ref: ../../../docs/openapi.yaml#/components/schemas/ErrorResponse
